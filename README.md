@@ -12,7 +12,7 @@
 ### 插件卸载
 - `npm uninstall --save pm2`          # 卸载插件 --save 本地卸载
 
-### 游戏服务器项目目录结构
+### 服务器项目目录结构
 - bin                               # 存放启动脚本
 - config                            # 存放配置文件
 - lib                               # 存放常用类库模块
@@ -20,4 +20,11 @@
 - model                             # 存放数据模型
 - public                            # 存放静态文件
 - routes                            # 存放路由文件
-app.js                              # 主程序
+
+### 服务器启动脚本与使用
+- 项目目录放到指定目录下
+- 使用PowerShell命令启动服务器(需要先进入项目目录) `npm start`
+- 或者启动 bin/http-server.js        # 启动服务器脚本
+- bin/upload-files.html             # 客户端上传文件页面
+-     其中 action="http://localhost:3001/upload/files" 是上传文件的接口地址
+-     其中 <select name="path" value="D:/"> 是文件上传到服务器位置
