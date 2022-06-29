@@ -7,16 +7,17 @@
 </head>
 <body>
 
-<form method="post" enctype="multipart/form-data" action="http://localhost:3001/upload/files">
+<!-- http://10.0.1.245:3001/ -->
+<form method="post" enctype="multipart/form-data" action="http://10.0.1.245:3001/upload/files"> 
     <p>请选择要上传的目录：</p>
     <p>
-        <select name="path" value="D:/hos web/Clinic web/nodejs_server/log/gamelog_json">
-            <option value="D:/hos web/Clinic web/nodejs_server/log/gamelog_json">D:/hos web/Clinic web/nodejs_server/log/gamelog_json</option>
+        <select name="path" value="D:\hos web\Clinic web\nodejs_server\log/gamelog_json">
+            <option value="D:\hos web\Clinic web\nodejs_server\log/gamelog_json">D:\hos web\Clinic web\nodejs_server\log/gamelog_json</option>
             <option value="E:\temp\upload">E:\temp\upload</option>
         </select>
     </p>
     <p>请选择要上传的文件（可多个文件）：</p>
-    <p><input type="file" name="file" multiple/></p>
+    <p><input type="file" name="files" multiple/></p>
     <p><input type="submit" value="上传" /></p>
 </form>
 <!--以上代码中，`<form>`的`method`属性值必须是`post`，`enctype`属性值必须是`multipart/form-data`，且上传控件的`type`属性值必须是`file`。-->
