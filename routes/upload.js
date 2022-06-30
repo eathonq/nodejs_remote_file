@@ -1,5 +1,6 @@
 let express = require('express');
 let fs = require("fs");
+let path = require("path");
 let router = express.Router();
 
 const multer = require('multer');
@@ -41,12 +42,14 @@ router.post('/files', multerUpload.array('files'), function (req, res, next) {
         return;
     } else {
         // 校验保存目录
-        let path = req.body.path;
+        let pathName = req.body.path;
+        // 路径格式化
+        pathName = pathName.replace(/\\/g, '/');
         // 去掉路径后面的/
-        if (path.substr(-1) === '/') {
-            path = path.substr(0, path.length - 1);
+        if (pathName.substr(-1) === '/') {
+            pathName = pathName.substr(0, pathName.length - 1);
         }
-        if (!fs.existsSync(path)) {
+        if (!fs.existsSync(pathName)) {
             next({ code: code.ERROR_PATH });
             return;
         }
@@ -56,8 +59,14 @@ router.post('/files', multerUpload.array('files'), function (req, res, next) {
         for (let i = 0; i < req.files.length; i++) {
             let file = req.files[i];
             //console.log(file);
-            console.log(`originalname: ${file.originalname}, size: ${file.size}, path: ${path}`);
-            fs.renameSync('./public/upload/' + file.filename, path + '/' + file.originalname);  // 可以修改文件名称(转移到指定目录)
+            console.log(`originalname: ${file.originalname}, size: ${file.size}, path: ${pathName}`);
+            var source = path.join('./public/upload/', file.filename);
+            var target = path.join(pathName, file.originalname);
+            // 移动文件
+            var readStream = fs.createReadStream(source);
+            var writeStream = fs.createWriteStream(target);
+            readStream.pipe(writeStream);
+
             _files.push(file.originalname);
         }
 
@@ -65,5 +74,21 @@ router.post('/files', multerUpload.array('files'), function (req, res, next) {
         next();
     }
 });
+
+// 定时清理文件
+setInterval(function () {
+    let files = fs.readdirSync('./public/upload/');
+    for (let i = 0; i < files.length; i++) {
+        let file = files[i];
+        let filePath = path.join('./public/upload/', file);
+        let stats = fs.statSync(filePath);
+        if (stats.isFile()) {
+            let time = new Date().getTime() - stats.mtime.getTime();
+            if (time > 1000 * 30) {
+                fs.unlinkSync(filePath);
+            }
+        }
+    }
+}, 1000 * 30);
 
 module.exports = router;
